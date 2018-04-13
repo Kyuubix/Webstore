@@ -17,7 +17,7 @@
     <section>
         <div class="jumbotron">
             <div class="container">
-                <h1>${greeting}</h1>
+                <h1>${{greeting}</h1>
                 <p>${tagline}</p>
             </div>
         </div>
