@@ -7,9 +7,7 @@ import com.packt.webstore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.MatrixVariable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -29,14 +27,14 @@ public class ProductController
         model.addAttribute("products", productService.getAllProducts());
         return "products";
     }
+
     @RequestMapping("/all")
-    public ModelAndView allProducts()
+    public String allProducts(Model model)
     {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("products", productService.getAllProducts());
-        modelAndView.setViewName("products");
-        return modelAndView;
+        model.addAttribute("products", productService.getAllProducts());
+        return "products";
     }
+
     @RequestMapping("/{category}")
     public String getProductsByCategory(Model model, @PathVariable("category") String productCategory)
     {
@@ -49,5 +47,20 @@ public class ProductController
     {
         model.addAttribute("products", productService.getProductByFilter(filterParams));
         return "products";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String getAddNewProductForm(Model model)
+    {
+        Product newProduct = new Product();
+        model.addAttribute("newProduct", newProduct);
+        return "addProduct";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String processAddNewProductForm(@ModelAttribute("newProduct") Product productToBeAdded)
+    {
+        productService.addProduct(productToBeAdded);
+        return "redirect:/products";
     }
 }
